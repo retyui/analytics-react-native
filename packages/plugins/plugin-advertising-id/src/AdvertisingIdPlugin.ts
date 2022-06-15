@@ -10,6 +10,8 @@ import {
 } from '@segment/sovran-react-native';
 import type { AdvertisingIdData, StorageConfig } from './types';
 
+import { NativeModules } from 'react-native';
+
 const advertisingIdStore = createStore<AdvertisingIdData>({
   id: undefined,
 });
@@ -69,6 +71,13 @@ export class AdvertisingIdPlugin extends Plugin {
     if (this.hasRegisteredListener === false) {
       this.registerTrackingStatusListener();
     }
+
+    NativeModules.AnalyticsReactNativePluginAdvertisingId.getAdvertisingId().then(
+      (id: string) => {
+        console.log('advertisingId', id);
+        this.setContext({ id });
+      }
+    );
   }
 
   setTrackingStatus() {
